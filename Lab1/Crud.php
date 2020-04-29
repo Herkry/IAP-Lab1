@@ -7,7 +7,10 @@
 		public function update();
 		public function removeOne();
 		public function removeAll();
-	}
 
+		//added for lab2
+		public function validateForm();
+		public function createFormErrorSessions();
+	}
 
 ?>
