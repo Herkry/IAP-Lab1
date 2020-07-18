@@ -12,13 +12,23 @@
 		private $username;
 		private $password;
 
-		function __construct($first_name, $last_name, $city_name, $username, $password){
+		private $utc_timestamp;
+		private $offset;
+
+		private $file_path;
+
+		function __construct($first_name, $last_name, $city_name, $username, $password, $utc_timestamp, $offset, $file_path){
 			$this->first_name = $first_name;
 			$this->last_name = $last_name;
 			$this->city_name = $city_name;
 
 			$this->username =$username;
 			$this->password =$password;
+
+			$this->utc_timestamp = $utc_timestamp;
+			$this->offset = $offset;
+
+			$this->file_path = $file_path;
 		}
 
 		/*Faking static constructor wel will use to login as login does not 
@@ -32,6 +42,21 @@
 		}
 
 		//setters and getters
+		public function setUTCTimestamp($utc_timestamp){
+			$this->utc_timestamp = $utc_timestamp; 
+		}
+
+		public function getUTCTimestamp(){
+			return $this->utc_timestamp; 
+		}
+
+		public function setOffset($offset){
+			$this->offset = $offset; 
+		}
+
+		public function getOffset(){
+			return $this->offset; 
+		}
 		public function setUsername($username){
 			$this->username = $username; 
 		}
@@ -63,8 +88,11 @@
 			$city = $this->city_name;
 			$username = $this->username;
 			$password = $this->password;
+			$utc_timestamp = $this->utc_timestamp;
+			$offset = $this->offset;
+			$file_path = $this->file_path;
 
-			$res = mysqli_query($con, "INSERT INTO user(first_name, last_name, user_city, username, password) VALUES('$fn', '$ln', '$city', '$username', '$password')") or die("Error: " .mysqli_error($con));
+			$res = mysqli_query($con, "INSERT INTO user(first_name, last_name, user_city, username, password, utc_timestmp, offset, filePath) VALUES('$fn', '$ln', '$city', '$username', '$password', '$utc_timestamp', '$offset', '$file_path')") or die("Error: " .mysqli_error($con));
 			return $res;
 			mysqli_close($con);
 		}
@@ -179,13 +207,24 @@
 		
 		public function createUserSession(){
 			session_start();
-			$_SESSION["username"] = $this->getUsername();	
+			//storing username
+			$_SESSION["username"] = $this->getUsername();
+			//storing user id
+			$userName = $this->getUsername();
+			$sql = "SELECT id FROM  user WHERE username = '$userName'";
+			$res = mysqli_query($con->returnConn(), $sql) or die("Error" .mysqli_connect_error());
+			// $res = mysql_query("SELECT * FROM user") or die("Error" .mysqli_connect_error());
+			while($row = mysqli_fetch_assoc($res)) {
+				$_SESSION["userId"] = $row["id"];
+			}
+
 		}
 		
 		public function logout(){
 			session_start();
 			unset($_SESSION["username"]);
-			session_destoy();
+			unset($_SESSION["userId"]);
+			session_destroy();
 			header("Location:lab1.php");	
 		}
 

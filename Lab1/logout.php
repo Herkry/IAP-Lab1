@@ -1,5 +1,5 @@
 <?php
     include_once "user.php";
-    $instance = User::create();
-    $instance->logout();
+    $user = new User("anonymous", "anonymous", "anonymous", "anonymous", "anonymous", "anonymous", "anonymous", "anonymous");
+    $user->logout();
 ?>

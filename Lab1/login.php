@@ -11,7 +11,7 @@
         // $instance->setPassword($password);
         // $instance->setUsername($username);
 
-        $fakeUser = new User("fname","lname","city","username","password");
+        $fakeUser = new User("anonymous", "anonymous", "anonymous", "$username", "$password", "anonymous", "anonymous", "anonymous");
         $fakeUser->setPassword($password);
         $fakeUser->setUsername($username);
 
@@ -27,6 +27,7 @@
             //create a user session
             // $instance->createUserSession();
             $fakeUser->createUserSession();
+            
         }
         else{
             $con->closeDatabase();
